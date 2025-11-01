@@ -583,21 +583,21 @@ async function generateChallengeForDate(iso, plan) {
       iso,
       tzDisplay()
     );
-    const endpoint = `${API_URL}/models/${MODEL_ID}:generateContent?key=${encodeURIComponent(
-      GEMINI_API_KEY
-    )}`;
+    const endpoint =
+      `${API_URL}/models/${MODEL_ID}:generateContent?key=${encodeURIComponent(
+        GEMINI_API_KEY
+      )}`;
+    const body = {
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: "user", parts: [{ text: userPayload }] }],
+      generationConfig: { responseMimeType: "application/json" }
+    };
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        system_instruction: { role: "system", parts: [{ text: systemPrompt }] },
-        contents: [{ role: "user", parts: [{ text: userPayload }] }],
-        generationConfig: {
-          responseMimeType: "application/json"
-        }
-      })
+      body: JSON.stringify(body)
     });
 
     if (!response.ok) {
@@ -614,10 +614,7 @@ async function generateChallengeForDate(iso, plan) {
     }
 
     const data = await response.json();
-    const rawText = data?.candidates?.[0]?.content?.parts
-      ?.map((part) => part?.text || "")
-      .join(" ")
-      .trim();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     if (!rawText) {
       throw new Error("Empty response");
     }
