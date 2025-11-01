@@ -1,0 +1,411 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap');
+
+:root {
+  --primary: #008080;
+  --secondary: #ff9966;
+  --accent: #f2f2ff;
+  --text: #0f1113;
+  --muted: #778;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: #ffffff;
+  color: var(--text);
+}
+
+#appHeader,
+#appMain,
+#appFooter {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-inline: 16px;
+}
+
+#appHeader {
+  padding-block: 16px 8px;
+}
+
+#appTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  margin: 8px 0;
+}
+
+header button,
+footer button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+
+#progressBarTrack {
+  position: relative;
+  height: 8px;
+  background: rgba(0, 128, 128, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#progressBarFill {
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: var(--primary);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+#progressPercent {
+  text-align: right;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+#appHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+header .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#btnProfile {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--accent);
+  color: var(--primary);
+}
+
+#appMain {
+  padding-block: 8px 96px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#weekView {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profile-extras {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-extras.hidden {
+  display: none !important;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.week-tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  background: var(--accent);
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.week-tile.today {
+  outline: 2px solid var(--primary);
+}
+
+.tile-status-dot {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--secondary);
+}
+
+#dayDetailView {
+  background: var(--accent);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#dayDetailLabel {
+  font-weight: 600;
+}
+
+.day-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.day-select label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.day-select select {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+}
+
+.day-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.day-actions button {
+  width: 100%;
+}
+
+.btn-primary,
+.btn-secondary,
+#btnSubmitScore,
+#btnReturnWeek {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: #fff;
+}
+
+#btnReturnWeek {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+#challengeCard {
+  background: var(--accent);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#challengeCard h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.objective {
+  margin: 0;
+  color: var(--text);
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: #fff;
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+#challengeCard ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+#challengeStatus .error {
+  color: #b00020;
+  font-weight: 600;
+}
+
+#challengeStatus .muted,
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+#appFooter {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  padding-bottom: 24px;
+  padding-top: 16px;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08);
+}
+
+#radialSlider {
+  max-width: 320px;
+  margin: 0 auto 16px;
+  touch-action: none;
+}
+
+.radial-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.slider-track {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 14;
+}
+
+.slider-tick {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.slider-tick.active {
+  stroke: var(--secondary);
+}
+
+.slider-knob {
+  fill: var(--secondary);
+  stroke: #fff;
+  stroke-width: 4;
+}
+
+.slider-label {
+  text-anchor: middle;
+  font-size: 1rem;
+  font-weight: 600;
+  fill: var(--secondary);
+}
+
+#btnSubmitScore {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  min-height: 52px;
+}
+
+#btnSubmitScore:disabled {
+  background: rgba(0, 128, 128, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#submissionChip {
+  text-align: center;
+  margin-top: 12px;
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+#storageErrorBanner {
+  background: #ffdddd;
+  color: #7a0000;
+  padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+#linkResetApp {
+  color: var(--primary);
+  text-decoration: underline;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#debugPanel {
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: grid;
+  gap: 4px;
+}
+
+footer input[type="range"] {
+  width: 100%;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus,
+button:focus,
+select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
