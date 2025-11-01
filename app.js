@@ -4,7 +4,7 @@ import {
   getField3Options,
   isValidTriplet
 } from "./deps.js";
-import { buildPrompt } from "./prompts.js";
+import { buildPrompt } from "./prompt.js";
 import { MODEL_ID, API_URL, GEMINI_API_KEY, APP_VERSION } from "./config.js";
 
 const STORAGE_KEY = "ask-otto-state";
@@ -462,7 +462,7 @@ function renderChallengeCard() {
   if (generatingChallenge) {
     const loading = document.createElement("p");
     loading.className = "muted";
-    loading.textContent = "Contacting Gemini for today\'s challenge...";
+    loading.textContent = "Contacting Gemini for today's challenge...";
     challengeStatus.appendChild(loading);
     return;
   }
@@ -471,7 +471,7 @@ function renderChallengeCard() {
     if (plan && isValidTriplet(plan.field1, plan.field2, plan.field3)) {
       const generateButton = document.createElement("button");
       generateButton.className = "btn-primary";
-      generateButton.textContent = "Generate today\'s challenge";
+      generateButton.textContent = "Generate today's challenge";
       generateButton.addEventListener("click", () => {
         triggerChallengeGeneration();
       });
@@ -481,14 +481,14 @@ function renderChallengeCard() {
     } else {
       const msg = document.createElement("p");
       msg.className = "muted";
-      msg.textContent = "Set today\'s training focus in the profile tab to generate a challenge.";
+      msg.textContent = "Set today's training focus in the profile tab to generate a challenge.";
       challengeStatus.appendChild(msg);
     }
     return;
   }
 
   const title = document.createElement("h2");
-  title.textContent = challenge.title || "Today\'s Challenge";
+  title.textContent = challenge.title || "Today's Challenge";
   challengeContent.appendChild(title);
 
   const objective = document.createElement("p");
@@ -730,6 +730,18 @@ function handleScoreSubmit() {
   renderSliderAndSubmit();
 }
 
+function recomputeEmaProgress() {
+  const entries = Object.entries(state.resultsByDate || {})
+    .filter(([, result]) => typeof result?.dayScore === "number")
+    .sort(([isoA], [isoB]) => isoA.localeCompare(isoB));
+
+  let ema = 0;
+  entries.forEach(([, result]) => {
+    ema = ema * (1 - 0.15) + result.dayScore * 0.15;
+  });
+  state.metrics.emaProgress = Math.round(ema * 10) / 10;
+}
+
 function populateSelect(selectEl, options, selectedValue = null) {
   selectEl.innerHTML = "";
   const placeholder = document.createElement("option");
@@ -927,9 +939,7 @@ function renderDebug() {
     <strong>Debug</strong>
     <div>todayISO: ${todayInfo.iso}</div>
     <div>tz: ${todayInfo.tz}</div>
-    <div>plan: ${todayPlan?.field1 || "-"}, ${
-    todayPlan?.field2 || "-"
-  }, ${todayPlan?.field3 || "-"}</div>
+    <div>plan: ${todayPlan?.field1 || "-"}, ${todayPlan?.field2 || "-"}, ${todayPlan?.field3 || "-"}</div>
     <div>challenge loaded: ${Boolean(challenge)}</div>
     <div>emaProgress: ${ema.toFixed(1)}</div>
   `;

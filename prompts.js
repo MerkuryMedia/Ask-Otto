@@ -1,6 +1,6 @@
 import { isValidTriplet } from "./deps.js";
 
-const PROMPTS_BY_FIELD1 = {
+export const PROMPTS_BY_FIELD1 = {
   weightlifting: {
     system:
       "You are a concise strength coach. Reply with compact JSON describing a single barbell or dumbbell session based on the provided focus.",
@@ -132,5 +132,3 @@ export function buildPrompt(field1, field2, field3, dateISO, tz) {
     userPayload: template.buildUser({ dateISO, tz, field1, field2, field3 })
   };
 }
-
-export { PROMPTS_BY_FIELD1 };
