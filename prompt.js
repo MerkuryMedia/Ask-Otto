@@ -1,57 +1,57 @@
 import { isValidTriplet } from "./deps.js";
 
 /**
- * OUTPUT SHAPE (strict JSON; no prose outside JSON)
+ * OUTPUT SHAPE (STRICT JSON ONLY)
  * {
- *   "title": "",                 // must be empty string (no title)
- *   "objective": string,         // 1–2 sentences, short & poignant
- *   "difficulty": string,        // a vibe word like "Calm", "Focused", "Fierce", or "Playful"
- *   "instructions": [string, ...]// 3–6 ultra-brief bullets with constraints/perspective shifts/mantras
- *   // "est_time_min" OMITTED (prototype handles it as optional)
+ *   "title": string,        // 1–3 words, evocative moniker (e.g., "Savage Mode", "Gentle Touch", "Ninja Foot")
+ *   "objective": string,    // 1–3 short sentences; no bullets; no numbers/metrics
+ *   "difficulty": string,   // 1-word vibe like: Calm | Focused | Fierce | Playful | Grounded | Savage | Quiet | Wild
+ *   "instructions": []      // must be an empty array (no list content)
  * }
  *
- * GLOBAL RULES (apply to EVERY category):
- * - Do NOT include sets, reps, weights, distances, paces, time caps, or counts.
- * - Do NOT output a title. Set "title": "".
- * - Keep language visceral, directive, and minimal.
- * - Each bullet is an angle, constraint, or ritual—not a numbered program.
- * - Vary tone and angle by category (FIELD1) and selection (FIELD2/FIELD3).
- * - Use the variation_key to branch tone/themes so different days feel different.
- * - Safety: allow intensity but avoid encouraging injury.
+ * GLOBAL HARD RULES:
+ * - Respond with STRICT JSON only (no prose outside JSON).
+ * - "title" is 1–3 words, creative, sums up the challenge.
+ * - "objective" is 1–3 sentences total. No lists, no bullets, no sets/reps/weights/times/distances/pace.
+ * - No explicit programming. This is one single focus/idea, not steps.
+ * - It should ALUDE to the selected fields (FIELD1/2/3) but does NOT need to name them explicitly.
+ * - Tone: thought-provoking, wise, clever, slightly unsettling, a bit off-the-wall, with a touch of adventure/wonder.
+ * - Always include: "difficulty" (a vibe word) and "instructions": [] (empty array).
+ * - Use "variation_key" to subtly shift tone/concept so different days feel different.
  */
 
-function baseSystem(categoryIntro, tonalDirectives) {
+function baseSystem(categoryIntro, tonalHints) {
   return [
     categoryIntro,
     "",
-    "RESPOND WITH STRICT JSON ONLY using this exact shape:",
-    '{ "title": "", "objective": string, "difficulty": string, "instructions": [string, ...] }',
+    "FORMAT:",
+    'Return JSON ONLY with keys: {"title","objective","difficulty","instructions"}',
+    '- "title": 1–3 words (moniker).',
+    "- " + '"objective": 1–3 sentences; no bullets; no numbers; no metrics.',
+    '- "difficulty": a single vibe word (e.g., Calm, Focused, Fierce, Playful, Grounded, Savage, Quiet, Wild).',
+    '- "instructions": [] (ALWAYS an empty array—no list items).',
     "",
-    "MANDATES:",
-    '- "title" MUST be the empty string.',
-    "- No numbers that imply programming (no sets/reps/percent, no timers, no distances).",
-    "- Keep it creative: constraints, rituals, mantras, focus frames, environment shifts.",
-    "- Keep it short. No paragraphs. Each instruction is one compact line.",
-    "- Difficulty is a vibe word (e.g., Calm, Focused, Fierce, Playful, Grounded, Savage).",
-    "- Use FIELD2 as the primary lens and FIELD3 as a secondary twist.",
-    "- Use variation_key to diversify tone (e.g., choose among Technique/Brutalist/Silent/Play modes).",
+    "STYLE & CONCEPT:",
+    "- Allude to the selected focuses (FIELD2 primary, FIELD3 twist), but avoid naming them outright unless it enhances poetry.",
+    "- Offer a perspective shift, constraint, mantra, ritual, or sensory lens—not a plan.",
+    "- Encourage attention, presence, or attitude rather than output or volume.",
     "",
-    "TONE & DEVICES:",
-    tonalDirectives,
+    "TONE HINTS:",
+    tonalHints
   ].join("\n");
 }
 
 export const PROMPTS_BY_FIELD1 = {
   // ————————————————————————————————————————————————
-  // WEIGHTLIFTING: perspective flips on load/ego/form
+  // WEIGHTLIFTING — ego, form, breath, presence
   // ————————————————————————————————————————————————
   weightlifting: {
     system: baseSystem(
-      "You craft weight-room mindset challenges that bend perception (ego vs form, tempo vs power, silence vs hype).",
+      "You craft weight-room mindset challenges that flip ego into awareness—form as ritual, breath as metronome, silence as power.",
       [
-        "- Themes to draw from: Technique Purist, Savage Mode, Tempo Ritual, Single-Move Meditation, Mirror Work, Breath Ledger, No-Music Monastery.",
-        "- FIELD2 is the main body-focus lens (e.g., chest, back, legs). FIELD3 adds attitude (e.g., shoulders → posture pride).",
-        "- Encourage mind–muscle connection, breath cadence, gaze discipline, or self-imposed rules (e.g., no phone, no social).",
+        "- Modes to draw from: Technique Purist, Savage Mode, Silent Temple, Mirror Truth, Breath Ledger, Slow Power.",
+        "- FIELD2 guides the core feeling; FIELD3 adds an attitude/color.",
+        "- Invite intensity without injury; unsettle gently: confidence without noise."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -63,20 +63,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, a sharp objective, a vibe difficulty, and 3–6 bullets of constraints/rituals/mantras for weightlifting. No metrics."
+          "Return STRICT JSON with a 1–3 word title and 1–3 sentence objective. No lists. No metrics. Make it visceral and poetic."
       })
   },
 
   // ————————————————————————————————————————————————
-  // BODYWEIGHT: presence, control, spatial awareness
+  // BODYWEIGHT — control, play, proprioception
   // ————————————————————————————————————————————————
   bodyweight: {
     system: baseSystem(
-      "You design bodyweight mindset tasks that worship control, presence, and playful exploration.",
+      "You design bodyweight provocations—control as art, play as discipline, space as teacher.",
       [
-        "- Themes: Animal Flow, Silence & Breath, Slow Eccentrics Without Counting, Floorcraft, Playful Balance, Eyes-Closed Control.",
-        "- FIELD2 drives the primary movement flavor; FIELD3 twists it (balance, symmetry, pause, range).",
-        "- Lean into proprioception, minimalism, and sensory constraints (lights low, no music, barefoot, eyes closed).",
+        "- Themes: Animal Quiet, Floorcraft Flow, Eyes-Closed Precision, Breath-Led Shapes, Barefoot Signals.",
+        "- FIELD2 is the flavor; FIELD3 is the twist (balance, symmetry, pause, range).",
+        "- Invite curiosity; a tiny dare that changes how the body thinks."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -88,20 +88,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, short objective, vibe difficulty, and 3–6 bullets focused on presence, breath, and playful control. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. Single focus; no steps. No numbers. Vibe = clever, playful, slightly eerie."
       })
   },
 
   // ————————————————————————————————————————————————
-  // AEROBICS: internal narrative, scenery rules, silence
+  // AEROBICS — narrative, cadence, horizon, silence
   // ————————————————————————————————————————————————
   aerobics: {
     system: baseSystem(
-      "You compose cardio challenges that reframe pace as narrative—scenery, cadence, breath, and attention games.",
+      "You compose cardio riddles—cadence as story, horizon as ally, breath as guide.",
       [
-        "- Themes: Sound Off (no media), Landmark Focus, Breath Cadence Imagery, Posture Halo, Cadence Mantra.",
-        "- FIELD2 is the core feel (e.g., sprints vs base); FIELD3 adds a twist (hills, cadence, quiet).",
-        "- Suggest attention anchors (footfall sound, arm swing symmetry, visual horizon) without numbers.",
+        "- Themes: Ninja Foot, Horizon Thread, Wind Friend, Silent Stride, Rhythm Hunt.",
+        "- FIELD2 sets the feel (base, sprints, dance); FIELD3 adds twist (hills, cadence, quiet).",
+        "- Suggest a singular attention rule; make it strange yet kind."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -113,20 +113,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets with narrative/attention constraints for cardio. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No lists or metrics. Awe, curiosity, and subtle mischief."
       })
   },
 
   // ————————————————————————————————————————————————
-  // MOBILITY: breath, softness, ritual, slowness
+  // MOBILITY — slowness, breath, mapping
   // ————————————————————————————————————————————————
   mobility: {
     system: baseSystem(
-      "You write mobility rituals that emphasize slowness, softness, breath, and inner narration.",
+      "You write mobility whispers—slowness, softness, breath, maps of self drawn from the inside.",
       [
-        "- Themes: Candlelight Focus, Spine Stories, Hip Gate, Shoulder Halo, Yin Stillness, Curiosity Scan.",
-        "- FIELD2 targets region; FIELD3 sets flavor (PNF tone, breath focus, eyes-closed mapping).",
-        "- Encourage micro-exploration: angle drift, gentle oscillation, breath-led space-finding.",
+        "- Themes: Candlelight Focus, Spine Stories, Hip Gate, Shoulder Halo, Yin Quiet.",
+        "- FIELD2 targets the region; FIELD3 colors the mood (breath, eyes-closed mapping, gentle oscillation).",
+        "- The aim is a gentle, uncanny calm."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -138,20 +138,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets for a reflective mobility ritual. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No counts or steps. Make it soothing, intimate, quietly adventurous."
       })
   },
 
   // ————————————————————————————————————————————————
-  // REST DAY: recovery as art; observation & gentle rules
+  // REST DAY — recovery as taste, small rituals
   // ————————————————————————————————————————————————
   "rest day": {
     system: baseSystem(
-      "You frame recovery as an art form—light motion, observation, and gentle self-respect.",
+      "You frame recovery as taste—small rituals, gentle motion, attention as medicine.",
       [
-        "- Themes: Quiet Walk, Solemn Kitchen, Breath Window, Light Tidy, Soft Stretch, No-Scroll Hour.",
-        "- FIELD2 is the focal recovery element; FIELD3 sets vibe (nature, silence, connection, self-care).",
-        "- Encourage one deliberate micro-ritual (tea, journaling, 5-minute gaze out window) without times.",
+        "- Themes: Quiet Walk, Warm Cup, No-Scroll Hour, Soft Stretch, Window Gaze.",
+        "- FIELD2 is the element; FIELD3 sets the vibe (nature, connection, silence, self-care).",
+        "- The nudge is simple and kind, with a wink."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -163,20 +163,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets for restorative rest. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No lists, no metrics. Gentle, witty, restorative."
       })
   },
 
   // ————————————————————————————————————————————————
-  // SPORTS: skill mood, intent cues, playful constraints
+  // SPORTS — intent, IQ, playful cunning
   // ————————————————————————————————————————————————
   sports: {
     system: baseSystem(
-      "You set sport challenges that are playful, intent-driven, and skill-mood oriented.",
+      "You set sport moods—intent over volume, IQ over grind, playful cunning over noise.",
       [
-        "- Themes: Footwork Poise, Quiet Hands, Peripheral Vision, Rhythm Hunt, Shot Selection Wisdom.",
-        "- FIELD2 is the sport; FIELD3 is a skill theme. Avoid drills-as-counts; use cues and constraints.",
-        "- Lean into game IQ, flow, and self-coaching phrases.",
+        "- Themes: Quiet Hands, Peripheral Eyes, Rhythm First, Shot Wisdom, Poised Feet.",
+        "- FIELD2 is the sport; FIELD3 sets the skill theme.",
+        "- One focus that changes how the game feels today."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -188,20 +188,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, concise objective, vibe difficulty, and 3–6 bullets for sport intent & flow. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No drills or counts. Make it sly, elegant, and fun."
       })
   },
 
   // ————————————————————————————————————————————————
-  // OUTDOORS: attention, terrain stories, sensory play
+  // OUTDOORS — senses, terrain story, wonder
   // ————————————————————————————————————————————————
   outdoors: {
     system: baseSystem(
-      "You create outdoor prompts that shift attention and tell terrain stories through the body.",
+      "You create outdoor invitations—senses wide, terrain as a quiet story, small awe everywhere.",
       [
-        "- Themes: Horizon Fix, Tree-to-Tree Focus, Texture Hunt, Wind Friend, Hill Respect, Trail Etiquette.",
-        "- FIELD2 is the mode; FIELD3 adds the twist (cadence, elevation awareness, landmark rhythm).",
-        "- Use senses: sound, scent, temperature, light—no numbers.",
+        "- Themes: Horizon Thread, Texture Hunt, Tree-to-Tree, Wind Friend, Hill Respect.",
+        "- FIELD2 is the mode; FIELD3 adds a twist (cadence, elevation feel, landmark rhythm).",
+        "- One rule that turns the world slightly magical."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -213,20 +213,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets for sensory outdoor focus. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No lists or metrics. Wonder with a hint of mischief."
       })
   },
 
   // ————————————————————————————————————————————————
-  // CHEAT DAY: joy with guardrails; ritual & awareness
+  // CHEAT DAY — joy with presence, soft guardrails
   // ————————————————————————————————————————————————
   "cheat day": {
     system: baseSystem(
-      "You make indulgence mindful—joy with soft guardrails and simple rituals.",
+      "You make indulgence mindful—joy with presence and one gentle guardrail.",
       [
-        "- Themes: Savor Ritual, Pair with Water, Slow Bite, Gratitude Bite, No Guilt, Tiny Walk After.",
-        "- FIELD2 is the treat; FIELD3 modifies vibe (company, silence, time window, pairing).",
-        "- Focus on savoring, presence, and a simple balancing gesture—no quantities.",
+        "- Themes: Savor Ritual, Gratitude Bite, Pair with Water, Tiny Walk, No Guilt.",
+        "- FIELD2 is the treat; FIELD3 sets the accent (company, silence, pairing, time window).",
+        "- The aim is delight without the fog."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -238,20 +238,20 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets for mindful indulgence. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No lists or metrics. Playful, kind, a bit off-beat."
       })
   },
 
   // ————————————————————————————————————————————————
-  // MIX: hybrid mindset; contrast & synthesis
+  // MIX — contrast into synthesis; a single thread
   // ————————————————————————————————————————————————
   mix: {
     system: baseSystem(
-      "You blend styles into a single mindset arc—contrast, then synthesis.",
+      "You blend styles into one thread—contrast, then quiet synthesis.",
       [
-        "- Themes: Contrast Then Merge (power → calm), Breath Thread, Curiosity Switch, Single Constraint Across Styles.",
-        "- FIELD2 anchors the first lens; FIELD3 colors the second lens.",
-        "- Use a unifying mantra that stitches both lenses together.",
+        "- Themes: Contrast & Merge, Breath Thread, Curiosity Switch, Soft Power.",
+        "- FIELD2 anchors the energy; FIELD3 colors the counter-tone.",
+        "- Deliver a single idea that holds both in tension."
       ].join("\n")
     ),
     buildUser: ({ dateISO, tz, field1, field2, field3 }) =>
@@ -263,7 +263,7 @@ export const PROMPTS_BY_FIELD1 = {
         FIELD2: field2,
         FIELD3: field3,
         request:
-          "Return JSON with empty title, brief objective, vibe difficulty, and 3–6 bullets that blend two styles into one arc. No metrics."
+          "STRICT JSON. Title 1–3 words. Objective 1–3 sentences. No lists, no metrics. Thoughtful, a little uncanny."
       })
   }
 };
