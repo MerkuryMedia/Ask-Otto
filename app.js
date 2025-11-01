@@ -651,9 +651,6 @@ function normalizeChallenge(payload) {
       .filter(Boolean)
       .slice(0, 6);
   }
-  if (!instructions.length) {
-    instructions = ["Follow the prompt and listen to your body."];
-  }
   return {
     title,
     objective,
