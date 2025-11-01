@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ask Otto Fitness Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header id="appHeader">
+      <div id="storageErrorBanner" class="hidden">
+        Storage unavailable. <button id="linkResetApp">Reset App</button>
+      </div>
+      <div class="header-row">
+        <h1 id="appTitle">Ask Otto</h1>
+        <button id="btnProfile" aria-label="Open profile">
+          <span aria-hidden="true">👤</span>
+        </button>
+      </div>
+      <div id="progressBarTrack">
+        <div id="progressBarFill"></div>
+      </div>
+      <div id="progressPercent">0%</div>
+    </header>
+
+    <main id="appMain">
+      <section id="weekView" aria-label="Weekly schedule" class="hidden"></section>
+      <div id="profileExtras" class="profile-extras hidden">
+        <button id="linkResetProfile" class="link-button" aria-label="Reset app data">
+          Reset App
+        </button>
+      </div>
+
+      <section id="dayDetailView" class="hidden" aria-label="Day detail">
+        <div id="dayDetailLabel"></div>
+        <div class="day-select">
+          <label for="field1Select">Field 1</label>
+          <select id="field1Select"></select>
+        </div>
+        <div class="day-select">
+          <label for="field2Select">Field 2</label>
+          <select id="field2Select" disabled></select>
+        </div>
+        <div class="day-select">
+          <label for="field3Select">Field 3</label>
+          <select id="field3Select" disabled></select>
+        </div>
+        <div id="dayDetailStatus" class="muted"></div>
+        <div class="day-actions">
+          <button
+            id="btnSaveDay"
+            class="btn-primary"
+            type="button"
+            aria-label="Save selections and generate today's challenge"
+          >
+            Save &amp; Generate
+          </button>
+          <button id="btnReturnWeek" aria-label="Return to week">Return</button>
+        </div>
+      </section>
+
+      <section id="challengeCard" aria-live="polite" class="hidden">
+        <div id="challengeStatus"></div>
+        <div id="challengeContent"></div>
+        <div id="challengeActions"></div>
+      </section>
+
+      <div id="debugPanel"></div>
+    </main>
+
+    <footer id="appFooter">
+      <div id="submissionChip" class="hidden"></div>
+      <div id="radialSlider" class="hidden"></div>
+      <label class="sr-only" for="scoreRange">Completion score</label>
+      <input
+        type="range"
+        id="scoreRange"
+        class="sr-only"
+        min="1"
+        max="10"
+        step="1"
+      />
+      <button id="btnSubmitScore" class="hidden" aria-label="Submit score">Submit Score</button>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
