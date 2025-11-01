@@ -31,6 +31,7 @@ const challengeContent = document.getElementById("challengeContent");
 const challengeActions = document.getElementById("challengeActions");
 const challengeStatus = document.getElementById("challengeStatus");
 const profileExtras = document.getElementById("profileExtras");
+const profileSaveButton = document.getElementById("btnProfileSave");
 const radialSliderRoot = document.getElementById("radialSlider");
 const scoreRangeInput = document.getElementById("scoreRange");
 const submitScoreButton = document.getElementById("btnSubmitScore");
@@ -196,6 +197,14 @@ function setupEventListeners() {
     event.preventDefault();
     resetApp();
   });
+
+  if (profileSaveButton) {
+    profileSaveButton.addEventListener("click", () => {
+      handleProfileSave().catch((error) => {
+        console.error("Profile save failed", error);
+      });
+    });
+  }
 
   submitScoreButton.addEventListener("click", handleScoreSubmit);
 
@@ -525,17 +534,23 @@ function renderChallengeCard() {
   }
 }
 
-function triggerChallengeGeneration() {
+function triggerChallengeGeneration(options = {}) {
+  const { force = false } = options;
   const todayISO = todayInfo.iso;
   const plan = state.weeklyPlan[todayInfo.weekday];
   if (generatingChallenge) {
-    return;
+    return Promise.resolve();
   }
   if (!plan || !isValidTriplet(plan.field1, plan.field2, plan.field3)) {
-    return;
+    return Promise.resolve();
   }
-  if (state.challengeByDate[todayISO]) {
-    return;
+  if (!force && state.challengeByDate[todayISO]) {
+    return Promise.resolve();
+  }
+
+  if (force && state.challengeByDate[todayISO]) {
+    delete state.challengeByDate[todayISO];
+    saveState();
   }
 
   if (!GEMINI_API_KEY || GEMINI_API_KEY === "REPLACE_WITH_KEY") {
@@ -545,17 +560,18 @@ function triggerChallengeGeneration() {
     generatingChallenge = false;
     renderChallengeCard();
     renderSliderAndSubmit();
-    return;
+    return Promise.resolve();
   }
 
   generatingChallenge = true;
   generationError = null;
   renderChallengeCard();
-  generateChallengeForDate(todayISO, plan).finally(() => {
+  const promise = generateChallengeForDate(todayISO, plan).finally(() => {
     generatingChallenge = false;
     renderChallengeCard();
     renderSliderAndSubmit();
   });
+  return promise;
 }
 
 async function generateChallengeForDate(iso, plan) {
@@ -728,6 +744,61 @@ function handleScoreSubmit() {
   saveState();
   renderProgress();
   renderSliderAndSubmit();
+}
+
+async function handleProfileSave() {
+  if (!profileSaveButton) {
+    return;
+  }
+
+  const originalLabel = profileSaveButton.textContent;
+  profileSaveButton.disabled = true;
+  profileSaveButton.textContent = "Saving...";
+
+  try {
+    saveState();
+    logWeeklyPlan();
+
+    const todayPlan = state.weeklyPlan[todayInfo.weekday];
+    const hasCompletePlan =
+      todayPlan && isValidTriplet(todayPlan.field1, todayPlan.field2, todayPlan.field3);
+
+    const generationPromise = hasCompletePlan
+      ? triggerChallengeGeneration({ force: true })
+      : Promise.resolve();
+
+    if (window.location.hash !== "#/home") {
+      window.location.hash = "#/home";
+    } else {
+      applyRoute("#/home");
+      render();
+    }
+
+    await generationPromise;
+  } finally {
+    profileSaveButton.disabled = false;
+    profileSaveButton.textContent = originalLabel;
+  }
+}
+
+function logWeeklyPlan() {
+  try {
+    const weekDates = getWeekDates(parseISOToDate(todayInfo.iso));
+    const rows = state.weeklyPlan.map((plan, index) => ({
+      day: weekDates[index]?.label || `Day ${index + 1}`,
+      date: weekDates[index]?.iso || "",
+      field1: plan?.field1 || "",
+      field2: plan?.field2 || "",
+      field3: plan?.field3 || ""
+    }));
+    if (console.table) {
+      console.table(rows);
+    } else {
+      console.log("Weekly plan:", rows);
+    }
+  } catch (error) {
+    console.log("Weekly plan:", state.weeklyPlan);
+  }
 }
 
 function recomputeEmaProgress() {

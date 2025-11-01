@@ -15,7 +15,7 @@ This repository hosts a mobile-first single-page application that builds daily f
 ## Local setup
 
 1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/).
-2. Copy `config.js` and replace `REPLACE_WITH_KEY` with your key. Optionally adjust the API URL or model ID.
+2. Open `config.js`, add your API key, and confirm `MODEL_ID` points to an available model such as `gemini-1.5-flash-latest`.
 3. Serve the repository with any static file server (for example `npx serve .`) or push to GitHub Pages with the repository root as the publish directory.
 
 ## Usage
@@ -28,7 +28,7 @@ This repository hosts a mobile-first single-page application that builds daily f
 
 ## Verification before deploying
 
-- Run `node --check app.js`, `node --check deps.js`, and `node --check prompts.js` to ensure the modules parse correctly.
+- Run `node --check app.js`, `node --check deps.js`, and `node --check prompt.js` to ensure the modules parse correctly.
 - Review `config.js` and confirm the Gemini API key is present before publishing to GitHub Pages.
 
 ## Deployment
