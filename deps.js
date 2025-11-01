@@ -1,3 +1,5 @@
+// Field option lists and validation helpers
+
 export const FIELD1_OPTIONS = [
   "weightlifting",
   "bodyweight",
