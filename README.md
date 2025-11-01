@@ -28,7 +28,7 @@ This repository hosts a mobile-first single-page application that builds daily f
 
 ## Verification before deploying
 
-- Run `node --check app.js`, `node --check deps.js`, and `node --check prompts.js` to ensure the modules parse correctly.
+- Run `node --check app.js`, `node --check deps.js`, and `node --check prompt.js` to ensure the modules parse correctly.
 - Review `config.js` and confirm the Gemini API key is present before publishing to GitHub Pages.
 
 ## Deployment
