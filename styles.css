@@ -121,6 +121,9 @@ header .header-row {
   margin-top: 12px;
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .profile-extras.hidden {
