@@ -197,17 +197,6 @@ header .header-row {
   font-size: 1rem;
 }
 
-.day-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.day-actions button {
-  width: 100%;
-}
-
 .btn-primary,
 .btn-secondary,
 #btnSubmitScore,
